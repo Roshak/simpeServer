@@ -15,9 +15,9 @@
         },
         type: "default"
       },
-      server: "nis-gest-server", // update me
+      server: "192.168.1.84", // update me
       options: {
-        database: "SAMA02", //update me
+        database: "NIS", //update me
         encrypt: false
       }
     };
@@ -49,7 +49,7 @@
       try {
         handlePost(json);
       } catch (error) {
-        res.write('KO: '+error.message+'\n')
+        res.write('KO: ' + error.message + '\n')
       }
       res.end(json);
     });
@@ -59,19 +59,19 @@
     });
 
     function handlePost(json) {
+      values = '';
       sql = 'INSERT INTO EXT_DATI_SEGHETTO (';
       JSON.parse(json, (key, value) => {
         sql += key + ','
-        values += `"${value}",`;
+        values += `'${value}',`;
         console.log(`${key}: ${value}`);
       });
       sql = sql.slice(0, -2);
-      values = ' VALUES (' + values.slice(0, -19) + ')';
+      sql += ' ) ';
+      values = ` VALUES ( ${values.slice(0, -19)} )`;
       sql = sql + values;
       console.log(sql);
-      if (connection.connected) {
-        insertSQL(sql);
-      }
+      insertSQL(sql);
     }
 
     function insertSQL(sql) {
@@ -79,8 +79,6 @@
         if (err)
           console.error(err);
         console.log('rowCount: ' + rowCount);
-        //release the connection back to the pool when finished
-        connection.release();
       });
       connection.execSql(request);
     }
