@@ -5,6 +5,8 @@
     const bodyParser = require('body-parser');
     const { Connection, Request } = require("tedious");
 
+    const error = document.getElementById('error');
+
     let app = express();
 
     const config = {
@@ -15,9 +17,9 @@
         },
         type: "default"
       },
-      server: "192.168.1.84", // update me
+      server: "nis-gest-server", // update me
       options: {
-        database: "NIS", //update me
+        database: "SAMA02", //update me
         encrypt: false
       }
     };
@@ -27,7 +29,7 @@
     // Attempt to connect and execute queries if connection goes through
     connection.on("connect", err => {
       if (err) {
-        console.error(err.message);
+        plog(err.message);
       }
     });
 
@@ -40,7 +42,7 @@
     app.use(bodyParser.json())
 
     app.get('/', function (req, res) {
-      res.send("Hello world! Lala Seth is here!");
+      res.send("TEST GET REQUEST");
     });
 
     app.post('/', (req, res) => {
@@ -54,8 +56,8 @@
       res.end(json);
     });
 
-    let server = app.listen(3000, function () {
-      console.log('Express server listening on port ' + server.address().port);
+    let server = app.listen(8080, function () {
+      plog('Express server listening on port ' + server.address().port);
     });
 
     function handlePost(json) {
@@ -70,17 +72,21 @@
       sql += ' ) ';
       values = ` VALUES ( ${values.slice(0, -19)} )`;
       sql = sql + values;
-      console.log(sql);
+      plog(sql);
       insertSQL(sql);
     }
 
     function insertSQL(sql) {
       var request = new Request(sql, (err, rowCount) => {
         if (err)
-          console.error(err);
-        console.log('rowCount: ' + rowCount);
+          plog(err);
+        plog('rowCount: ' + rowCount);
       });
       connection.execSql(request);
+    }
+
+    function plog(str) {
+      error.innerHTML += str + '<br />';
     }
 
     module.exports = app;

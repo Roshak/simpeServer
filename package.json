@@ -1,8 +1,8 @@
 {
   "name": "simpleserver",
-  "productName": "simpleserver",
+  "productName": "NodeServer",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Server with mssql integration",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "Roshak",
+    "name": "Francesco Gastaldi",
     "email": "the.gasta92@gmail.com"
   },
   "license": "MIT",
@@ -30,7 +30,7 @@
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
-            "darwin"
+            "darwin", "windows"
           ]
         },
         {
